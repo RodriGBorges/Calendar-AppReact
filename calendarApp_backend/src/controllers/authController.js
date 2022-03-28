@@ -81,5 +81,25 @@ module.exports = {
                 error
             })
         }
+    },
+    revalidateToken: async (req, res) => {
+
+        try {
+            
+            const token = await JWTGenerator(req.id, req.name);
+
+            return req.status(200).json({
+                ok: true,
+                token
+            })
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                msg: 'Contacte con el administrador del sitio.',
+                error
+            })
+        }
     }
 }
