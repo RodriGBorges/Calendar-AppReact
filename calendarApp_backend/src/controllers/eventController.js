@@ -23,6 +23,27 @@ module.exports = {
     },
     create: async (req, res) => {
 
+        const event = new Event(req.body);
+
+        try {
+            
+            event.user = req.uid;
+
+            await event.save()
+
+            return res.status(200).json({
+                ok: true,
+                msg: 'Evento guardado con éxito!.'
+            })
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                msg: 'Contacte con el administrador del sitio.',
+                error
+            })
+        }
     },
     update: async (req, res) => {
 
