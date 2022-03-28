@@ -1,5 +1,6 @@
 const User = require('../database/models/User');
 const bcryptjs = require('bcryptjs');
+const JWTGenerator = require('../helpers/jwt');
 
 module.exports = {
     userCreate: async (req, res) => {
@@ -42,5 +43,40 @@ module.exports = {
             })
         }
 
+    },
+    userLogin: async (req, res) => {
+
+        const {email, password} = req.body;
+
+        try {
+            
+            const user = await User.findOne({email});
+            const validPassword = user && bcryptjs.compareSync(password, user.password);
+
+            if(!user || !validPassword) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Credenciales inválidas.'
+                })
+            }
+
+            // Genero el JWT
+            const token = await JWTGenerator(user.id, user.name);
+
+            res.status(200).json({
+                ok: true,
+                uid: user.id,
+                name: user.name,
+                token
+            })
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                msg: 'Contacte con el administrador del sitio.',
+                error
+            })
+        }
     }
 }
