@@ -66,7 +66,7 @@ module.exports = {
             // Genero el JWT
             const token = await JWTGenerator(user.id, user.name);
 
-            res.status(200).json({
+            return res.status(200).json({
                 ok: true,
                 uid: user.id,
                 name: user.name,
@@ -88,7 +88,7 @@ module.exports = {
             
             const token = await JWTGenerator(req.id, req.name);
 
-            return req.status(200).json({
+            return res.status(200).json({
                 ok: true,
                 token
             })
