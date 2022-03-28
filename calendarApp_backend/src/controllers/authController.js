@@ -28,10 +28,13 @@ module.exports = {
             //guardamos datos del usuario
             await user.save();
 
+            const token = await JWTGenerator(user.id, user.name);
+
             return res.status(201).json({
                 ok: true,
                 uid: user.id,
-                name: user.name
+                name: user.namem,
+                token
             })
 
         } catch (error) {
