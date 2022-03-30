@@ -9,6 +9,7 @@ module.exports = {
 
             return res.status(200).json({
                 ok: true,
+                total: events.length,
                 data: events
             })
 
