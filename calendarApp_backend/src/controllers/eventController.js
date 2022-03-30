@@ -91,5 +91,40 @@ module.exports = {
     },
     remove: async (req, res) => {
 
+        const { id } = req.params;
+
+        try {
+            
+            const event = await Event.findById(id);
+
+            if(!event) {
+                return res.status(404).json({
+                    ok: false,
+                    msg: 'El evento no existe.'
+                })
+            }
+
+            if(event.user.toString() !== req.uid) {
+                return res.status(401).json({
+                    ok: false,
+                    msg: 'No tiene los permisos para eliminar este evento.'
+                })
+            }
+
+            await Event.findByIdAndDelete(id);
+
+            return res.status(200).json({
+                ok: true,
+                msg: 'El evento fue eliminado con éxito.'
+            })
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                ok: false,
+                msg: 'Contacte con el administrador del sitio.',
+                error
+            })
+        }
     }
 }

@@ -21,6 +21,7 @@ router
     update)
     .delete('/:id',
     check('id', 'Su id de MongoDB no es válido').isMongoId(),
+    fieldValidator,
     remove)
 
 
