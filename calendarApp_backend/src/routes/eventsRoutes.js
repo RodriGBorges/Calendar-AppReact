@@ -1,10 +1,12 @@
 const { Router } = require('express');
+const { check } = require('express-validator');
 const router = Router();
 
 const { all, create, update, remove } = require('../controllers/eventController');
 const fieldValidator = require('../middlewares/fieldValidator');
 const jwtValidator = require('../middlewares/jwtValidator');
 const eventValidator = require('../validations/eventValidator');
+const updateValidator = require('../validations/updateValidator');
 
 // Validacion a todas las rutas //
 router.use(jwtValidator)
@@ -13,8 +15,13 @@ router.use(jwtValidator)
 router
     .get('/', all)
     .post('/', eventValidator, fieldValidator, create)
-    .put('/:id', update)
-    .delete('/:id', remove)
+    .put('/:id', updateValidator, 
+    check('id', 'Su id de MongoDB no es válido').isMongoId(),
+    fieldValidator, 
+    update)
+    .delete('/:id',
+    check('id', 'Su id de MongoDB no es válido').isMongoId(),
+    remove)
 
 
 
